@@ -9,9 +9,13 @@ export default class Chat extends React.Component {
   }
 
   render() {
+    let color = this.props.route.params.color;
 
     return (
-      <View>
+      <View style={{
+        flex: 1,
+        backgroundColor: color
+      }}>
       {/* Rest of the UI */}
       </View>
     );
