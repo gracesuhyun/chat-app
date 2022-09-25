@@ -32,21 +32,37 @@ export default class Start extends React.Component {
                 <TouchableOpacity
                   style={styles.color1}
                   onPress={() => {this.setState({color: '#090C08'})}}
+                  accessible={true}
+                  accessibilityLabel="the color black"
+                  accessibilityHint="Lets you change your background color to black."
+                  accessibilityRole="button"
                 >
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.color2}
                   onPress={() => {this.setState({color: '#474056'})}}
+                  accessible={true}
+                  accessibilityLabel="the color purple"
+                  accessibilityHint="Lets you change your background color to purple."
+                  accessibilityRole="button"
                 >
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.color3}
                   onPress={() => {this.setState({color: '#8A95A5'})}}
+                  accessible={true}
+                  accessibilityLabel="the color light blue"
+                  accessibilityHint="Lets you change your background color to light blue."
+                  accessibilityRole="button"
                 >
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.color4}
                   onPress={() => {this.setState({color: '#B9C6AE'})}}
+                  accessible={true}
+                  accessibilityLabel="the color black"
+                  accessibilityHint="Lets you change your background color to light green."
+                  accessibilityRole="button"
                 >
                 </TouchableOpacity>
               </View>
