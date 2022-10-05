@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 // import { StyleSheet, View, Text, TextInput, Alert, Button } from 'react-native';
 import 'react-native-gesture-handler';
 
-// import the screens we want to navigate
 import Chat from './components/Chat';
 import Start from './components/Start';
 
