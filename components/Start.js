@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Button, TextInput, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default class Start extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = { 
@@ -9,7 +10,8 @@ export default class Start extends React.Component {
       color: '#090C08'};
   }
 
-  render() {    
+  render() {
+
     return (
       <View style={styles.fullContainer}>
 
