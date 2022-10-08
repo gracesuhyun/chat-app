@@ -3,7 +3,6 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 var firebaseConfig = {
-    databaseURL: "chat-app-b0680.firebaseio.com",
     apiKey: "AIzaSyCySJTysG-rullhFQttw8hFAdoRTRcg1Ec",
     authDomain: "chat-app-b0680.firebaseapp.com",
     projectId: "chat-app-b0680",
