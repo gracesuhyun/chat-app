@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import 'react-native-gesture-handler';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -114,12 +115,16 @@ export default class Chat extends React.Component {
 
   //Allows bubble customization   
   renderBubble(props) {
-      return (
-          <Bubble
-              {...props}
-              wrapperStyle={styles.bubble}
-          />
-      )
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: 'blue'
+          }
+        }}
+      />
+    )
   }
 
   render() {
@@ -143,16 +148,5 @@ export default class Chat extends React.Component {
 const styles = StyleSheet.create({
   container: {
       flex: 1,
-  },
-  chatTitle: {
-      color: '#FFFFFF'
-  },
-  bubble: {
-      left: {
-          backgroundColor: 'white',
-      },
-      right: {
-          backgroundColor: 'blue'
-      }
   }
 })
