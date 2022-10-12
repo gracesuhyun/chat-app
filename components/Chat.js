@@ -16,7 +16,7 @@ export default class Chat extends React.Component {
       user: {
         _id: '',
         name: '',
-        avatar: '',
+        avatar: 'https://placeimg.com/140/140/any',
       },
       isConnected: false,
     };
@@ -86,39 +86,35 @@ export default class Chat extends React.Component {
 
         this.referenceChatMessages = firebase.firestore().collection('messages');
 
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-            if (!user) {
-              firebase.auth().signInAnonymously();
-            }
-            this.setState({
-              messages: [],
-              user: {
-                _id: user.uid,
-                name: name,
-                avatar: 'https://placeimg.com/140/140/any',
-              },
-            });
-            this.unsubscribe = this.referenceChatMessages
-              .orderBy('createdAt', 'desc')
-              .onSnapshot(this.onCollectionUpdate);
-            this.saveMessages();
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+          if (!user) {
+            await firebase.auth().signInAnonymously();
+          }
+          this.setState({
+            messages: [],
+            user: {
+              _id: user.uid,
+              name: name,
+              avatar: 'https://placeimg.com/140/140/any',
+            },
+            isConnected: true,
+          });
+          this.unsubscribe = this.referenceChatMessages
+          .orderBy('createdAt', 'desc')
+          .onSnapshot(this.onCollectionUpdate);
         });
 
+        this.saveMessages();
       } else {
-        console.log('offline');
+        this.getMessages();
         this.setState({
           isConnected: false
         });
-        this.getMessages();
+        console.log('offline');
         window.alert('You are currently offline and are unable to send messages.');
       }
     });
   };
-
-  componentWillUnmount() {
-      this.unsubscribe();
-      this.authUnsubscribe();
-  }
 
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
@@ -137,7 +133,7 @@ export default class Chat extends React.Component {
       });
     });
     this.setState({
-        messages,
+        messages: messages
     });
   };
 
@@ -145,8 +141,8 @@ export default class Chat extends React.Component {
       this.setState(previousState => ({
           messages: GiftedChat.append(previousState.messages, messages),
       }), () => {
-          this.saveMessages();
           this.addMessages();
+          this.saveMessages();
       });
   }
 
@@ -175,7 +171,6 @@ export default class Chat extends React.Component {
     )
   }
 
-
   renderInputToolbar(props) {
     if (this.state.isConnected == false) {
     } else {
@@ -187,6 +182,11 @@ export default class Chat extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.unsubscribe();
+    this.authUnsubscribe();
+  }
+
   render() {
       const { color, name } = this.props.route.params;
 
@@ -196,7 +196,7 @@ export default class Chat extends React.Component {
                   renderBubble={this.renderBubble.bind(this)}
                   renderInputToolbar={this.renderInputToolbar.bind(this)}
                   messages={this.state.messages}
-                  onSend={messages => this.onSend(messages)}
+                  onSend={(messages) => this.onSend(messages)}
                   user={this.state.user}
               />
               {/*Prevent hidden input field on Android*/}
