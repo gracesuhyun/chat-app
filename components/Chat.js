@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import 'react-native-gesture-handler';
-import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat'
+import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from '@react-native-community/netinfo';
 
@@ -16,7 +16,7 @@ export default class Chat extends React.Component {
       user: {
         _id: '',
         name: '',
-        avatar: 'http://placeimg.com/140/140/any',
+        avatar: '',
       },
       isConnected: false,
     };
@@ -31,35 +31,13 @@ export default class Chat extends React.Component {
       measurementId: "G-KLSCV8FY1Z"
     };
 
-      // Initialize Firebase
+    // Initialize Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
 
     this.referenceChatMessages = firebase.firestore().collection('messages');
   }
-
-  onCollectionUpdate = (querySnapshot) => {
-    const messages = [];
-    // go through each document
-    querySnapshot.forEach((doc) => {
-      // get the QueryDocumentSnapshot's data
-      let data = doc.data();
-      messages.push({
-        _id: data._id,
-        text: data.text,
-        createdAt: data.createdAt.toDate(),
-        user: {
-          _id: data.user._id,
-          name: data.user.name,
-          avatar: 'http://placeimg.com/140/140/any',
-        },
-      });
-    });
-    this.setState({
-        messages,
-    });
-  };
 
   async getMessages() {
     let messages = '';
@@ -81,16 +59,17 @@ export default class Chat extends React.Component {
     }
   }
 
-  async deleteMessages() {
-    try {
-      await AsyncStorage.removeItem('messages');
-      this.setState({
-        messages: []
-      })
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
+  //used for deleting test messages
+  // async deleteMessages() {
+  //   try {
+  //     await AsyncStorage.removeItem('messages');
+  //     this.setState({
+  //       messages: []
+  //     })
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // }
 
   componentDidMount() {
 
@@ -102,7 +81,7 @@ export default class Chat extends React.Component {
       if (connection.isConnected) {
         console.log('online');
         this.setState({
-          isConnected: true,
+          isConnected: true
         });
 
         this.referenceChatMessages = firebase.firestore().collection('messages');
@@ -119,16 +98,16 @@ export default class Chat extends React.Component {
                 avatar: 'https://placeimg.com/140/140/any',
               },
             });
-
             this.unsubscribe = this.referenceChatMessages
               .orderBy('createdAt', 'desc')
               .onSnapshot(this.onCollectionUpdate);
             this.saveMessages();
         });
+
       } else {
         console.log('offline');
         this.setState({
-          isConnected: false,
+          isConnected: false
         });
         this.getMessages();
         window.alert('You are currently offline and are unable to send messages.');
@@ -140,6 +119,27 @@ export default class Chat extends React.Component {
       this.unsubscribe();
       this.authUnsubscribe();
   }
+
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
+    // go through each document
+    querySnapshot.forEach((doc) => {
+      let data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.createdAt.toDate(),
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar,
+        },
+      });
+    });
+    this.setState({
+        messages,
+    });
+  };
 
   onSend(messages = []) {
       this.setState(previousState => ({

@@ -84,7 +84,7 @@ export default class Start extends React.Component {
 
 const styles = StyleSheet.create({
   fullContainer: {
-    flex:1, 
+    flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center'},
 
