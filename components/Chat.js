@@ -13,6 +13,7 @@ export default class Chat extends React.Component {
     super();
     this.state = {
       messages: [],
+      uid: 0,
       user: {
         _id: '',
         name: '',
@@ -38,6 +39,28 @@ export default class Chat extends React.Component {
 
     this.referenceChatMessages = firebase.firestore().collection('messages');
   }
+
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
+    // go through each document
+    querySnapshot.forEach((doc) => {
+      let data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.createdAt.toDate(),
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar,
+        },
+      });
+    });
+    this.setState({
+        messages: messages
+    });
+    this.saveMessages();
+  };
 
   async getMessages() {
     let messages = '';
@@ -80,9 +103,6 @@ export default class Chat extends React.Component {
     NetInfo.fetch().then(connection => {
       if (connection.isConnected) {
         console.log('online');
-        this.setState({
-          isConnected: true
-        });
 
         this.referenceChatMessages = firebase.firestore().collection('messages');
 
@@ -90,8 +110,10 @@ export default class Chat extends React.Component {
           if (!user) {
             await firebase.auth().signInAnonymously();
           }
+
           this.setState({
             messages: [],
+            uid: user.uid,
             user: {
               _id: user.uid,
               name: name,
@@ -99,12 +121,15 @@ export default class Chat extends React.Component {
             },
             isConnected: true,
           });
+
           this.unsubscribe = this.referenceChatMessages
           .orderBy('createdAt', 'desc')
           .onSnapshot(this.onCollectionUpdate);
         });
+            // console.log(this.state.messages)
 
         this.saveMessages();
+
       } else {
         this.getMessages();
         this.setState({
@@ -116,29 +141,8 @@ export default class Chat extends React.Component {
     });
   };
 
-  onCollectionUpdate = (querySnapshot) => {
-    const messages = [];
-    // go through each document
-    querySnapshot.forEach((doc) => {
-      let data = doc.data();
-      messages.push({
-        _id: data._id,
-        text: data.text,
-        createdAt: data.createdAt.toDate(),
-        user: {
-          _id: data.user._id,
-          name: data.user.name,
-          avatar: data.user.avatar,
-        },
-      });
-    });
-    this.setState({
-        messages: messages
-    });
-  };
-
   onSend(messages = []) {
-      this.setState(previousState => ({
+      this.setState((previousState) => ({
           messages: GiftedChat.append(previousState.messages, messages),
       }), () => {
           this.addMessages();
@@ -182,10 +186,10 @@ export default class Chat extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-    this.authUnsubscribe();
-  }
+//  componentWillUnmount() {
+//    this.unsubscribe();
+//    this.authUnsubscribe();
+//  }
 
   render() {
       const { color, name } = this.props.route.params;
