@@ -2,7 +2,7 @@
 
 A simple chat app built using React Native, Expo, and Google Firestore Database 
 
-<img src="img/StartScreen.jpg" alt="Screenshot of start screen"> <img src="img/ChatScreen.jpg" alt="Screenshot of chat screen">
+<img src="img/StartScreen.jpg" width="50%" alt="Screenshot of start screen"> <img src="img/ChatScreen.jpg" width="50%" alt="Screenshot of chat screen">
 
 
 ## Key Features
