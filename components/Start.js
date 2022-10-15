@@ -27,7 +27,7 @@ export default class Start extends React.Component {
             style={styles.input}
             onChangeText={(name) => this.setState({ name })}
             value={this.state.name}
-            placeholder='  Your Name' />
+            placeholder='Your Name' />
 
           <Text style={styles.text}> Choose Background Color: </Text>
               <View style={styles.colorContainer}>
@@ -112,16 +112,19 @@ const styles = StyleSheet.create({
   userContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    padding: 15,
+    padding: 20,
     width: 300,
-    marginBottom: 15,
-    borderRadius: 10
+    marginTop: 100,
+    marginBottom: 80,
+    borderRadius: 15
   },
 
   input: { 
     height: 50, 
     borderColor: 'gray', 
-    borderWidth: 1 
+    borderWidth: 1,
+    borderRadius: 15,
+    textAlign: 'center',
   },
 
   colorContainer: {

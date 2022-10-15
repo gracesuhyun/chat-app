@@ -4,6 +4,8 @@ import 'react-native-gesture-handler';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from '@react-native-community/netinfo';
+import MapView from 'react-native-maps';
+import CustomActions from './CustomActions';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -13,7 +15,8 @@ export default class Chat extends React.Component {
     super();
     this.state = {
       messages: [],
-      uid: 0,
+      image: null,
+      location: null,
       user: {
         _id: '',
         name: '',
@@ -54,10 +57,12 @@ export default class Chat extends React.Component {
           name: data.user.name,
           avatar: data.user.avatar,
         },
+        image: data.image || null,
+        location: data.location || null,
       });
     });
     this.setState({
-        messages: messages
+        messages
     });
     this.saveMessages();
   };
@@ -83,16 +88,16 @@ export default class Chat extends React.Component {
   }
 
   //used for deleting test messages
-  // async deleteMessages() {
-  //   try {
-  //     await AsyncStorage.removeItem('messages');
-  //     this.setState({
-  //       messages: []
-  //     })
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }
+  async deleteMessages() {
+    try {
+      await AsyncStorage.removeItem('messages');
+      this.setState({
+        messages: []
+      })
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   componentDidMount() {
 
@@ -113,7 +118,6 @@ export default class Chat extends React.Component {
 
           this.setState({
             messages: [],
-            uid: user.uid,
             user: {
               _id: user.uid,
               name: name,
@@ -147,6 +151,7 @@ export default class Chat extends React.Component {
       }), () => {
           this.addMessages();
           this.saveMessages();
+          this.deleteMessages();
       });
   }
 
@@ -158,6 +163,8 @@ export default class Chat extends React.Component {
       text: message.text || '',
       createdAt: message.createdAt,
       user: message.user,
+      image: message.image || null,
+      location: message.location || null,
     });
   }
 
@@ -168,7 +175,7 @@ export default class Chat extends React.Component {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: 'blue'
+            backgroundColor: 'navy'
           }
         }}
       />
@@ -186,27 +193,55 @@ export default class Chat extends React.Component {
     }
   }
 
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
+
+  renderCustomView (props) {
+    const { currentMessage} = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{
+            width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3}}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  }
+
 //  componentWillUnmount() {
 //    this.unsubscribe();
 //    this.authUnsubscribe();
 //  }
 
   render() {
-      const { color, name } = this.props.route.params;
+    const { color, name } = this.props.route.params;
 
-      return (
-          <View style={[{ backgroundColor: color }, styles.container]}>
-              <GiftedChat
-                  renderBubble={this.renderBubble.bind(this)}
-                  renderInputToolbar={this.renderInputToolbar.bind(this)}
-                  messages={this.state.messages}
-                  onSend={(messages) => this.onSend(messages)}
-                  user={this.state.user}
-              />
-              {/*Prevent hidden input field on Android*/}
-              {Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
-          </View>
-      );
+    return (
+      <View style={[{ backgroundColor: color }, styles.container]}>
+        <GiftedChat
+          renderBubble={this.renderBubble.bind(this)}
+          renderInputToolbar={this.renderInputToolbar.bind(this)}
+          renderActions={this.renderCustomActions}
+          renderCustomView={this.renderCustomView}
+          messages={this.state.messages}
+          onSend={(messages) => this.onSend(messages)}
+          user={this.state.user}
+        />
+        {/*Prevent hidden input field on Android*/}
+        {Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
+      </View>
+    );
   };
 }
 
