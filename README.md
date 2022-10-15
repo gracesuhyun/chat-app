@@ -2,7 +2,7 @@
 
 This chat app was built using React Native, Expo, and Google Firestore Database. The main features are to provide users with a chat interface and options to share images as well as their location.
 
-<img src="img/StartScreen.jpg" width="30%" alt="Screenshot of start screen"> <img src="img/ChatScreen.jpg" width="30%" alt="Screenshot of chat screen">
+<img src="img/StartScreen.jpg" width="300" alt="Screenshot of start screen"> <img src="img/ChatScreen.jpg" width="300" alt="Screenshot of chat screen">
 
 
 ## Key Features
