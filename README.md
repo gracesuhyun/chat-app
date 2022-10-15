@@ -13,8 +13,8 @@ This chat app was built using React Native, Expo, and Google Firestore Database.
 
 
 ## Dependencies Used
-
-`"dependencies": {
+```
+"dependencies": {
     "@expo/webpack-config": "^0.17.0",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/masked-view": "^0.1.11",
@@ -41,7 +41,8 @@ This chat app was built using React Native, Expo, and Google Firestore Database.
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
-  },`
+  },
+  ```
 
 
 ## Key Features
